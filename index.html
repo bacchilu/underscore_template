@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC “-//W3C//DTD XHTML 1.0 Strict//EN” “http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd”>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Test</title>
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="http://underscorejs.org/underscore-min.js"></script>
+    </head>
+    <body>
+
+        <script type="text/template" id="reminder-row-template">
+            <% var reminders = {NOW: "Today", DAY: "Yesterday", WEEK: "Last week"}; %>
+            <tr>
+                <td><%= name %></td>
+                <td><%= reminders[date] %></td>
+                <td><i class="icon-trash" style="cursor: pointer;"></i></td>
+            </tr>
+        </script>
+
+        <table id="table">
+            <tr><th>Name</th><th>Date</th><th></th></tr>
+        </table>
+
+        <script type="text/javascript">
+
+            function reloadTable(items) {
+
+                function addRow(reminder, index) {
+                    // Aggiungo una nuova riga alla tabella dei promemoria
+
+                    var t = _.template($("#reminder-row-template").html());
+
+                    var row = $(t(reminder));
+
+                    row.find(".icon-trash").click(function () {
+                        if (!confirm("Sure?"))
+                            return;
+                        // deleteReminder(index);
+                        reloadTable(items);
+                    });
+
+                    $("#table tr:last").after(row);
+                }
+
+                $("#table").find("tr:gt(0)").remove();
+                for (var i = 0; i < items.length; ++i)
+                    addRow(items[i], i);
+            }
+
+            $(document).ready(function () {
+
+                var items = [{name: "first", date: "NOW"}, {name: "second", date: "WEEK"}];
+
+                reloadTable(items);
+            });
+
+        </script>
+
+    </body>
+</html>
